@@ -8,4 +8,5 @@ services:
       - "8502:8501"
     volumes:
       - ./dashboard:/app/dashboard
+      - "../Databricks Tables:/app/dashboard/data"
     restart: unless-stopped

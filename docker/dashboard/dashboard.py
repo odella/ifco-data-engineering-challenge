@@ -161,7 +161,7 @@ DATA_DIR = os.path.join(
 
 @st.cache_data
 def load_data():
-    orders      = pd.read_csv(os.path.join(DATA_DIR, "silver_orders.csv"), parse_dates=["date"])
+    orders      = pd.read_csv(os.path.join(DATA_DIR, "silver_orders.csv"), parse_dates=["date"], dayfirst=True)
     crate_dist  = pd.read_csv(os.path.join(DATA_DIR, "gold_crate_distribution.csv"))
     commissions = pd.read_csv(os.path.join(DATA_DIR, "gold_sales_commissions.csv"))
     companies   = pd.read_csv(os.path.join(DATA_DIR, "gold_companies_salesowners.csv"))
@@ -671,8 +671,7 @@ with col_d2:
     )
     st.plotly_chart(fig_donut, use_container_width=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
-st.markdown('<p class="section-sub">Commission Efficiency</p>', unsafe_allow_html=True)
+
 
 # Calculate Commission per Order and its deviation from the mean
 orders_per_owner = orders_exp.groupby("salesowner")["order_id"].nunique().reset_index(name="total_orders")
@@ -736,6 +735,70 @@ with col_d4:
     st.plotly_chart(fig_dev, use_container_width=True)
 
 st.markdown("---")
+
+# ── Role Distribution per Sales Owner ────────────────────────────────────────
+st.markdown('<p class="section-sub" style="margin-top:1.5rem;">Role Distribution per Sales Owner</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-sub" style="font-size:0.75rem; margin-top:-0.5rem;">Proportion of orders where each salesperson acted as Main Owner vs Co-owner</p>', unsafe_allow_html=True)
+
+# Create dynamic roles and colors based on max roles
+max_co_owners = orders_exp["owner_rank"].max()
+role_map = {0: "Main Owner"}
+for i in range(1, max_co_owners + 1):
+    role_map[i] = f"Co-owner {i}"
+
+# Generate colors
+base_colors = ["#3b82f6", "#f59e0b", "#22c55e", "#ef4444", "#a855f7", "#ec4899", "#8b5cf6"]
+ROLE_COLORS = {role: base_colors[i % len(base_colors)] for i, role in role_map.items()}
+
+role_df = orders_exp.copy()
+role_df["role"] = role_df["owner_rank"].map(role_map)
+
+# Calculate exactly 100% per person
+role_counts = role_df.groupby(["salesowner", "role"]).size().reset_index(name="count")
+totals = role_counts.groupby("salesowner")["count"].sum().reset_index(name="total")
+role_pcts = pd.merge(role_counts, totals, on="salesowner")
+role_pcts["pct"] = (role_pcts["count"] / role_pcts["total"]) * 100
+
+# Sort owners by their % as Main Owner (for ordering the Y axis)
+# Reversing the order so highest Main Owner % is at the top of the chart
+main_data = role_pcts[role_pcts["role"] == "Main Owner"]
+main_order = main_data.sort_values("pct", ascending=True)["salesowner"].tolist()
+
+# Category order: Main Owner first, then Co-owner 1 -> Co-owner N
+# This places Main Owner anchored to the left side (0%) of the bar.
+category_roles = ["Main Owner"] + [f"Co-owner {i}" for i in range(1, max_co_owners + 1)]
+
+fig_roles = go.Figure()
+
+for role in category_roles:
+    sub_df = role_pcts[role_pcts["role"] == role].set_index("salesowner").reindex(main_order).fillna(0)
+    # Only show text if percentage is > 0 to avoid clutter
+    text_labels = sub_df["pct"].apply(lambda x: f"{x:.1f}%" if x > 0 else "")
+    
+    fig_roles.add_trace(go.Bar(
+        y=main_order,
+        x=sub_df["pct"],        # Exact percentages
+        name=role,
+        orientation="h",
+        marker_color=ROLE_COLORS.get(role, "#3b82f6"),
+        text=text_labels,
+        textposition="inside",
+        insidetextanchor="middle",
+        textfont=dict(color="white")
+    ))
+
+fig_roles.update_layout(
+    barmode="stack",
+    xaxis_title="", 
+    legend=dict(orientation="h", y=-0.2),
+    bargap=0.3,
+    title_text="",  # Remove undefined title
+    annotations=[]  # Clear any hidden annotations
+)
+dark(fig_roles, margin=dict(t=20, b=50, l=140, r=20))
+fig_roles.update_xaxes(ticksuffix="%", range=[0, 100], showgrid=False)
+st.plotly_chart(fig_roles, use_container_width=True, config={"displayModeBar": False})
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 8. SECTION E — COMPANY PORTFOLIO  (Bonus)

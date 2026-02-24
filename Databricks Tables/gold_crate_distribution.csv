@@ -1,20 +1,16 @@
 company_name,crate_type,total_crates
+Farm Fresh Co,Plastic,1
 Farm Fresh Co,Metal,1
-Farm Fresh Ltd,Plastic,1
 Farms Global Co,Metal,1
 Fresh Berries Inc,Plastic,1
 Fresh Farms Ltd,Wood,1
-Fresh Fruits Co,Metal,2
+Fresh Fruits Co,Metal,3
 Fresh Fruits Co,Plastic,2
 Fresh Fruits Co,Wood,1
-Fresh Fruits c.o,Metal,1
 Fresh Veg Co,Metal,1
-Fresh Veggies Inc,Metal,1
 Fruit Kings Ltd,Wood,1
 Fruit Market Ltd,Plastic,1
-Fruits & Veggies Co,Wood,1
 Global Seafood Co,Metal,1
-Global Veggies Inc,Metal,1
 Green Farms Inc,Metal,1
 Green Organic Co,Metal,1
 Green Veg Co,Wood,3
@@ -24,26 +20,24 @@ Healthy Choices Co,Plastic,1
 Healthy Eats Ltd,Plastic,1
 Healthy Greens Co,Plastic,1
 Healthy Organics Co,Wood,1
-Healthy Snacks,Plastic,2
-Healthy Snacks Co,Wood,1
+Healthy Snacks Co,Plastic,2
+Healthy Snacks Co,Wood,2
 Meat Express Ltd,Metal,1
 Meat Packers Ltd,Plastic,3
 Organic Farms,Metal,2
 Organic Farms,Plastic,1
 Organic Foods Ltd,Wood,1
-Organic Veggies Ltd,Plastic,1
 Seafood Express,Plastic,1
 Seafood Global Inc,Metal,1
 Seafood Network Ltd,Wood,1
 Seafood Supplier,Plastic,3
-Seafood Supplier GmbH,Metal,3
+Seafood Supplier,Metal,3
 Tropical Farms Ltd,Wood,1
 Tropical Fresh Co,Wood,1
 Tropical Fruits Ltd,Plastic,2
 Tropical Fruits Ltd,Metal,1
 Veggie Haven Co,Plastic,1
 Veggie Partners Ltd,Wood,1
-Veggies Inc,Wood,2
-Veggies Inc,Plastic,1
-Veggies Unlimited,Plastic,1
-healthy snacks c.o.,Wood,1
+Veggies Inc,Wood,3
+Veggies Inc,Plastic,3
+Veggies Inc,Metal,2
