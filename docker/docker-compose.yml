@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  dashboard:
+    build: .
+    container_name: ifco_sales_dashboard
+    ports:
+      - "8502:8501"
+    volumes:
+      - ./dashboard:/app/dashboard
+    restart: unless-stopped
